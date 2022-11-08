@@ -1,0 +1,103 @@
+<div class="container table-responsive py-5">
+    <div class="row mb-3">
+        <div class="d-flex justify-content-center">
+            <div class="col-md-2 text-center">
+                <label for="name">Select Date</label>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="input-group date-picker">
+                        <input class="form-control cal4" [(ngModel)]="dateReturn" placeholder="yyyy-mm-dd"
+                            (click)="startDateInput.toggle()" id="start" ngbDatepicker #startDateInput="ngbDatepicker">
+
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary calendar" (click)="startDateInput.toggle()"
+                                type="button"><i class="fa fa-calendar"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-3" style="margin-left: 5px;">
+                <button class="btn btn-primary">Load</button>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row">
+        <form [formGroup]="form">
+            <div class="d-flex justify-content-center">
+                <div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <label for="name">Start Date: </label>
+                        <ngb-timepicker id='id1' formControlName="start_time"></ngb-timepicker>
+                    </div>
+                </div>
+                <div style="margin-left:10px;">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <label for="name">End Date: </label>
+                        <ngb-timepicker id='id2' formControlName="end_time"></ngb-timepicker>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="form-control">
+                        <textarea name="" id="" formControlName="description" cols="30" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="form-control">
+                        <button [disabled]="form.invalid" (click)="addRecord()" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Start Time</th>
+                <th scope="col">End Time</th>
+                <th scope="col">Minutes</th>
+                <th scope="col">Description</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody *ngIf="RecordStore.allItems.length > 0">
+            <tr *ngFor="let item of RecordStore.allItems; let i =index;">
+                <th scope="row">{{i+1}}</th>
+                <td>{{timeFormat(item.start_time)}}</td>
+                <td>{{timeFormat(item.end_time)}}</td>
+                <td>{{getMinutes(item.start_time, item.end_time)}}</td>
+                <td>{{item.description}}
+                </td>
+                <td>
+                    <ul class="list-inline m-0">
+                        <li class="list-inline-item" *ngIf="AuthStore.getUser != 'admin'">
+                            <button (click)="edit(item.description)" class="btn btn-success btn-sm rounded-0"
+                                type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i
+                                    class="fa fa-edit"></i></button>
+                        </li>
+                        <li class="list-inline-item" *ngIf="AuthStore.getUser != 'admin'">
+                            <button (click)="delete(i)" class="btn btn-danger btn-sm rounded-0" type="button"
+                                data-toggle="tooltip" data-placement="top" title="Delete"><i
+                                    class="fa fa-trash"></i></button>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="container" *ngIf="RecordStore.allItems.length == 0">
+        <div class="d-flex justify-content-center">
+            <div class="span4"></div>
+            <div class="span4"><img class="center-block" src="assets/image/no_data.png" alt="" /></div>
+
+        </div>
+        <div class="span4">
+            <h3 class="text-center" style="margin-right:30px"> NO data found</h3>
+        </div>
+    </div>
+</div>
